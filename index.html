@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotoMarket Insights Cuba · Inteligencia de mercado para el sector de las motos</title>
+<meta name="description" content="Plataforma de inteligencia de mercado para el sector de las motos en Cuba. 6.101 anuncios y 30 entrevistas convertidos en datos accionables para compradores, talleres, mecánicos, importadoras y emprendedores.">
+<meta name="theme-color" content="#081120">
+<meta property="og:title" content="MotoMarket Insights Cuba">
+<meta property="og:description" content="6.101 anuncios y 30 entrevistas convertidos en inteligencia de mercado para el sector de las motos en Cuba.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CU">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23081120'/%3E%3Cpath d='M14 42h36l-6-14H26l-6 8h-6z' fill='none' stroke='%2300e5ff' stroke-width='3'/%3E%3Ccircle cx='20' cy='44' r='6' fill='none' stroke='%2300e5ff' stroke-width='3'/%3E%3Ccircle cx='44' cy='44' r='6' fill='none' stroke='%2300e5ff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<a class="skip-link" href="#dashboard">Saltar al dashboard</a>
+<div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+<header class="site-header" id="top">
+  <div class="container header-inner">
+    <a class="brand" href="#top" aria-label="MotoMarket Insights Cuba, inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="34" height="34"><rect width="64" height="64" rx="14" fill="none"/><path d="M14 42h36l-6-14H26l-6 8h-6z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="20" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="44" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M30 20h10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-text"><strong>MotoMarket</strong><small>Insights Cuba</small></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Navegación principal">
+      <a href="#dashboard">Mercado</a>
+      <a href="#comparador">Comparador</a>
+      <a href="#calculadora">Calculadora</a>
+      <a href="#mapa">Mapa</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#metodologia">Método</a>
+      <a class="btn btn-primary btn-sm nav-cta" href="#dashboard">Explorar mercado</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="grid-lines"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="live-badge"><span class="dot"></span> Observatorio digital · La Habana · 2026</span>
+        <h1 id="heroTitle">El mercado de motos más grande analizado en La Habana</h1>
+        <p class="hero-sub">Transformamos <strong>6.101 anuncios</strong> y <strong>30 entrevistas</strong> en inteligencia de mercado accionable para comprar, vender, reparar e invertir con ventaja.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#dashboard">
+            Explorar mercado
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="btn btn-ghost" id="heroNarrate" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+            Escuchar análisis
+          </button>
+        </div>
+        <ul class="hero-meta">
+          <li><span class="pulse"></span> Datos actualizados</li>
+          <li>4 categorías</li>
+          <li>17 días de captura</li>
+          <li>Fuente pública + campo</li>
+        </ul>
+      </div>
+      <div class="hero-panel" aria-label="Resumen ejecutivo del mercado">
+        <div class="panel-head">
+          <span class="panel-title">Market snapshot</span>
+          <span class="panel-chip">USD</span>
+        </div>
+        <div class="snapshot-row">
+          <span>Oferta eléctrica</span>
+          <strong class="accent">78,3%</strong>
+        </div>
+        <div class="snapshot-bar"><span style="width:78.3%"></span></div>
+        <div class="snapshot-row">
+          <span>Mediana combustión</span>
+          <strong>2.250</strong>
+        </div>
+        <div class="snapshot-row">
+          <span>Mediana eléctrica</span>
+          <strong>2.050</strong>
+        </div>
+        <div class="snapshot-row">
+          <span>Marca líder</span>
+          <strong class="accent-2">Topmaq</strong>
+        </div>
+        <div class="snapshot-foot">
+          <span class="mini-dot"></span> 6.101 anuncios · 30 entrevistas
+        </div>
+      </div>
+    </div>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>78,3% de la oferta es eléctrica</span><span>Topmaq lidera con 506 anuncios</span><span>Bicicletas eléctricas: 2.576 anuncios</span><span>Mediana combustión: 2.250 USD</span><span>Mediana eléctrica: 2.050 USD</span><span>Patinetes: 750 USD</span><span>30 entrevistas de campo</span>
+        <span>78,3% de la oferta es eléctrica</span><span>Topmaq lidera con 506 anuncios</span><span>Bicicletas eléctricas: 2.576 anuncios</span><span>Mediana combustión: 2.250 USD</span><span>Mediana eléctrica: 2.050 USD</span><span>Patinetes: 750 USD</span><span>30 entrevistas de campo</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section kpi-section" aria-label="Indicadores clave">
+    <div class="container">
+      <div class="kpi-grid">
+        <article class="kpi card-hover">
+          <span class="kpi-label">Anuncios analizados</span>
+          <strong class="kpi-value" data-count="6101" data-decimals="0">0</strong>
+          <span class="kpi-sub">Revolico · La Habana</span>
+        </article>
+        <article class="kpi card-hover">
+          <span class="kpi-label">Entrevistas de campo</span>
+          <strong class="kpi-value" data-count="30" data-decimals="0">0</strong>
+          <span class="kpi-sub">Compradores, talleres e importadoras</span>
+        </article>
+        <article class="kpi card-hover">
+          <span class="kpi-label">Días de captura</span>
+          <strong class="kpi-value" data-count="17" data-decimals="0">0</strong>
+          <span class="kpi-sub">Ventana de observación</span>
+        </article>
+        <article class="kpi card-hover">
+          <span class="kpi-label">Categorías</span>
+          <strong class="kpi-value" data-count="4" data-decimals="0">0</strong>
+          <span class="kpi-sub">Eléctricas, bicis, combustión, patinetes</span>
+        </article>
+        <article class="kpi card-hover kpi-accent">
+          <span class="kpi-label">Oferta eléctrica</span>
+          <strong class="kpi-value" data-count="78.3" data-decimals="1">0</strong><span class="kpi-unit">%</span>
+          <span class="kpi-sub">Motos + bicicletas eléctricas</span>
+        </article>
+        <article class="kpi card-hover">
+          <span class="kpi-label">Mediana combustión</span>
+          <strong class="kpi-value" data-count="2250" data-decimals="0">0</strong><span class="kpi-unit">USD</span>
+          <span class="kpi-sub">Rango típico 1.900 – 2.600</span>
+        </article>
+        <article class="kpi card-hover">
+          <span class="kpi-label">Mediana eléctrica</span>
+          <strong class="kpi-value" data-count="2050" data-decimals="0">0</strong><span class="kpi-unit">USD</span>
+          <span class="kpi-sub">Rango típico 1.300 – 2.630</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mercado" aria-labelledby="marketTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Problema y oportunidad</span>
+        <h2 id="marketTitle">El mercado se mueve a ciegas. Nosotros ponemos los datos sobre la mesa.</h2>
+        <p class="lead">En Cuba, comprar o vender una moto suele depender de rumores, capturas de pantalla y conversaciones de barrio. No existe un observatorio público de precios, oferta y demanda. MotoMarket Insights Cuba convierte la oferta publicada y las voces del terreno en señales claras para decidir mejor.</p>
+      </div>
+      <div class="split">
+        <article class="card reveal card-hover">
+          <span class="icon-badge warn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+          </span>
+          <h3>El problema</h3>
+          <p>Precios dispersos, anuncios sin contexto, marcas que nadie compara y riesgos que se descubren demasiado tarde. Compradores que pagan de más y talleres que no saben qué se está moviendo.</p>
+          <ul class="check-list">
+            <li>Falta de información pública y verificable</li>
+            <li>Precios sin referencia de mercado</li>
+            <li>Decisiones basadas en percepciones</li>
+            <li>Necesidades técnicas invisibles</li>
+          </ul>
+        </article>
+        <article class="card reveal card-hover">
+          <span class="icon-badge good" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+          </span>
+          <h3>La oportunidad</h3>
+          <p>La primera plataforma que ordena el mercado de motos en La Habana y lo convierte en inteligencia: qué se publica, a qué precio, qué marcas dominan y dónde están los huecos de negocio.</p>
+          <ul class="check-list">
+            <li>Referencias de precio por categoría y marca</li>
+            <li>Señales de demanda y oferta</li>
+            <li>Mapa de necesidades reales del mercado</li>
+            <li>Oportunidades para talleres e importadoras</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="dashboard" aria-labelledby="dashTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Dashboard interactivo</span>
+        <h2 id="dashTitle">Explora el mercado como un analista</h2>
+        <p class="lead">Cuatro vistas para entender la oferta en segundos. Pasa el cursor, filtra categorías y compara precios. Todo se calcula sobre 6.101 anuncios capturados entre el 10 y el 26 de octubre de 2026.</p>
+      </div>
+      <div class="dash-toolbar reveal">
+        <div class="segmented" role="group" aria-label="Filtro de gráficos">
+          <button class="seg rounded is-active" data-dash="all" type="button">Todo el mercado</button>
+          <button class="seg rounded" data-dash="elec" type="button">Movilidad eléctrica</button>
+          <button class="seg rounded" data-dash="comb" type="button">Combustión</button>
+        </div>
+        <span class="toolbar-note">Última captura: 26 oct 2026</span>
+      </div>
+      <div class="chart-grid">
+        <article class="chart-card reveal">
+          <header><h3>Composición por categoría</h3><span class="chip">6.101 anuncios</span></header>
+          <div class="chart-wrap"><canvas id="chartCategories" role="img" aria-label="Gráfico de composición por categoría: bicicletas eléctricas 2.576, motos eléctricas 2.201, motos de combustión 1.099 y patinetes 225."></canvas></div>
+        </article>
+        <article class="chart-card reveal">
+          <header><h3>Precio mediano por categoría</h3><span class="chip">USD</span></header>
+          <div class="chart-wrap"><canvas id="chartPrices" role="img" aria-label="Gráfico de precio mediano: combustión 2250 USD, moto eléctrica 2050, bicicleta eléctrica 1150, patinete 750."></canvas></div>
+        </article>
+        <article class="chart-card reveal">
+          <header><h3>Marcas con más presencia</h3><span class="chip">Top 5</span></header>
+          <div class="chart-wrap"><canvas id="chartBrands" role="img" aria-label="Gráfico de marcas: Topmaq 506, JMD 227, Mountain 187, Vedca 173, Challenger 170."></canvas></div>
+        </article>
+        <article class="chart-card reveal">
+          <header><h3>Demanda: vistas promedio</h3><span class="chip">Interés relativo</span></header>
+          <div class="chart-wrap"><canvas id="chartDemand" role="img" aria-label="Gráfico de vistas promedio: combustión 60.8, bicicletas eléctricas 27.4, motos eléctricas 14.9, patinetes 9.2."></canvas></div>
+        </article>
+      </div>
+      <p class="footnote reveal">Los anuncios representan oferta publicada, no ventas efectivas. La demanda se aproxima por número de vistas de cada anuncio.</p>
+    </div>
+  </section>
+
+  <section class="section" id="comparador" aria-labelledby="cmpTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Herramienta 01</span>
+        <h2 id="cmpTitle">¿Estás pagando de más?</h2>
+        <p class="lead">Introduce la categoría y el precio que te piden. Te decimos cómo se posiciona frente a la mediana real del mercado y qué margen de negociación tienes.</p>
+      </div>
+      <div class="tool-grid">
+        <form class="card tool-form reveal" id="priceForm" novalidate>
+          <label class="field">
+            <span>Categoría</span>
+            <select id="cmpCategory" required>
+              <option value="combustion">Moto de combustión</option>
+              <option value="electrica" selected>Moto eléctrica</option>
+              <option value="bicicleta">Bicicleta eléctrica</option>
+              <option value="patinete">Patinete eléctrico</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Precio que te piden (USD)</span>
+            <div class="input-prefix">
+              <span>$</span>
+              <input id="cmpPrice" type="number" min="1" step="1" placeholder="Ej. 2300" inputmode="numeric" required>
+            </div>
+          </label>
+          <button class="btn btn-primary btn-block" type="submit">Analizar precio</button>
+          <p class="form-hint">Referencia: medianas publicadas en Revolico (octubre 2026).</p>
+        </form>
+        <div class="card verdict-panel reveal" id="cmpResult" aria-live="polite">
+          <div class="verdict-empty" id="cmpEmpty">
+            <span class="icon-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            </span>
+            <h3>Tu análisis aparecerá aquí</h3>
+            <p>Elige una categoría, escribe un precio y pulsa “Analizar precio”.</p>
+          </div>
+          <div class="verdict-content" id="cmpContent" hidden>
+            <span class="verdict-tag" id="cmpTag">—</span>
+            <h3 id="cmpTitleResult">—</h3>
+            <p id="cmpText">—</p>
+            <div class="meter">
+              <div class="meter-labels"><span>Oferta</span><span>Normal</span><span>Elevado</span></div>
+              <div class="meter-track"><span class="meter-fill" id="cmpFill"></span><span class="meter-marker" id="cmpMarker"></span></div>
+              <div class="meter-values"><span id="cmpP25">—</span><span id="cmpMed">—</span><span id="cmpP75">—</span></div>
+            </div>
+            <dl class="stat-list" id="cmpStats"></dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="calculadora" aria-labelledby="calcTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Herramienta 02</span>
+        <h2 id="calcTitle">¿Cuánto debería costar esta moto?</h2>
+        <p class="lead">Estima un precio justo combinando categoría, marca, estado y extras. Ideal para preparar una oferta, publicar un anuncio o detectar un chollo.</p>
+      </div>
+      <div class="tool-grid">
+        <form class="card tool-form reveal" id="calcForm" novalidate>
+          <div class="form-row">
+            <label class="field">
+              <span>Categoría</span>
+              <select id="calcCategory">
+                <option value="combustion">Moto de combustión</option>
+                <option value="electrica" selected>Moto eléctrica</option>
+                <option value="bicicleta">Bicicleta eléctrica</option>
+                <option value="patinete">Patinete eléctrico</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Marca</span>
+              <select id="calcBrand">
+                <option value="topmaq">Topmaq</option>
+                <option value="jmd">JMD</option>
+                <option value="mountain">Mountain</option>
+                <option value="vedca">Vedca</option>
+                <option value="challenger">Challenger</option>
+                <option value="otra" selected>Otra / sin marca</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span>Estado</span>
+            <select id="calcCondition">
+              <option value="nueva">Nueva</option>
+              <option value="como-nueva">Como nueva</option>
+              <option value="usada" selected>Usada en buen estado</option>
+              <option value="reparar">Para reparar</option>
+            </select>
+          </label>
+          <fieldset class="field checks">
+            <legend>Extras que incluye</legend>
+            <label class="check"><input type="checkbox" id="calcBattery"> <span>Batería nueva o de mayor capacidad</span></label>
+            <label class="check"><input type="checkbox" id="calcPapers"> <span>Papeles y chapa en regla</span></label>
+            <label class="check"><input type="checkbox" id="calcSecond"> <span>Segunda batería incluida</span></label>
+          </fieldset>
+          <button class="btn btn-primary btn-block" type="submit">Calcular precio justo</button>
+        </form>
+        <div class="card calc-result reveal" id="calcResult" aria-live="polite">
+          <span class="eyebrow">Estimación de mercado</span>
+          <div class="calc-range">
+            <strong id="calcLow">—</strong>
+            <span class="calc-dash">a</span>
+            <strong id="calcHigh">—</strong>
+            <span class="calc-unit">USD</span>
+          </div>
+          <p id="calcText">Completa el formulario para obtener un rango recomendado de publicación y compra.</p>
+          <div class="calc-bars" id="calcBars" hidden>
+            <div class="calc-bar-row"><span>Compra inteligente</span><div class="calc-bar"><span id="calcBarLow"></span></div><em id="calcTagLow">—</em></div>
+            <div class="calc-bar-row"><span>Precio justo</span><div class="calc-bar"><span id="calcBarMid"></span></div><em id="calcTagMid">—</em></div>
+            <div class="calc-bar-row"><span>Publicación ambiciosa</span><div class="calc-bar"><span id="calcBarHigh"></span></div><em id="calcTagHigh">—</em></div>
+          </div>
+          <p class="form-hint">Estimación orientativa basada en medianas por categoría y ajustes de marca, estado y extras. No sustituye una inspección técnica.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="narrador" aria-labelledby="narTitle">
+    <div class="container">
+      <div class="narrator-card reveal">
+        <div class="narrator-copy">
+          <span class="eyebrow">Narrador inteligente</span>
+          <h2 id="narTitle">Escucha el análisis del mercado</h2>
+          <p>Un resumen narrado con los hallazgos, las tendencias y las oportunidades más relevantes. Perfecto si prefieres escuchar mientras conduces o trabajas.</p>
+          <div class="narrator-actions">
+            <button class="btn btn-primary" id="narrateBtn" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+              <span id="narrateLabel">Escuchar resumen</span>
+            </button>
+            <button class="btn btn-ghost" id="stopNarrate" type="button" disabled>Detener</button>
+          </div>
+          <p class="narrator-status" id="narrateStatus">Listo para narrar los hallazgos principales.</p>
+        </div>
+        <div class="narrator-visual" aria-hidden="true">
+          <div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="wave-label">Resumen de mercado · 60 seg</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="mapa" aria-labelledby="mapTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Geointeligencia</span>
+        <h2 id="mapTitle">Mapa de actividad del mercado</h2>
+        <p class="lead">Las zonas con mayor actividad concentran más compradores, vendedores y talleres. Explora La Habana y detecta dónde se mueve el mercado.</p>
+      </div>
+      <div class="map-shell reveal">
+        <div id="map" role="application" aria-label="Mapa interactivo de La Habana con zonas de actividad del mercado de motos"></div>
+        <div class="map-legend" aria-label="Leyenda de intensidad">
+          <span class="legend-title">Intensidad de actividad</span>
+          <div class="legend-gradient"></div>
+          <div class="legend-labels"><span>Baja</span><span>Media</span><span>Alta</span></div>
+        </div>
+        <div class="map-disclaimer">
+          <strong>Simulación visual</strong>
+          <span>El dataset no contiene municipios. Las zonas se generan de forma demostrativa para ilustrar el potencial de geointeligencia.</span>
+        </div>
+        <div class="map-toolbar">
+          <button class="seg is-active" id="mapHeatBtn" type="button">Mapa de calor</button>
+          <button class="seg" id="mapPinsBtn" type="button">Municipios</button>
+        </div>
+      </div>
+      <p class="footnote reveal">15 municipios de La Habana · coordenadas aproximadas · capa de calor generada con pesos demostrativos.</p>
+    </div>
+  </section>
+
+  <section class="section" id="marcas" aria-labelledby="brandTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Ranking</span>
+        <h2 id="brandTitle">Las marcas que dominan la conversación</h2>
+        <p class="lead">Presencia medida por número de anuncios publicados. Una marca con más presencia tiene más oferta, más repuestos en circulación y más conversaciones de mercado.</p>
+      </div>
+      <div class="brands-card reveal">
+        <div class="brands-head">
+          <span>Marca</span><span>Anuncios</span>
+        </div>
+        <div class="brands-list" id="brandsList">
+          <div class="brand-row" data-value="506"><span class="brand-rank">01</span><span class="brand-name">Topmaq</span><div class="brand-bar"><span style="--w:100%"></span></div><span class="brand-value">506</span></div>
+          <div class="brand-row" data-value="227"><span class="brand-rank">02</span><span class="brand-name">JMD</span><div class="brand-bar"><span style="--w:44.9%"></span></div><span class="brand-value">227</span></div>
+          <div class="brand-row" data-value="187"><span class="brand-rank">03</span><span class="brand-name">Mountain</span><div class="brand-bar"><span style="--w:37%"></span></div><span class="brand-value">187</span></div>
+          <div class="brand-row" data-value="173"><span class="brand-rank">04</span><span class="brand-name">Vedca</span><div class="brand-bar"><span style="--w:34.2%"></span></div><span class="brand-value">173</span></div>
+          <div class="brand-row" data-value="170"><span class="brand-rank">05</span><span class="brand-name">Challenger</span><div class="brand-bar"><span style="--w:33.6%"></span></div><span class="brand-value">170</span></div>
+        </div>
+        <p class="footnote">El 47,7% de los anuncios no declara marca, por lo que el ranking refleja presencia publicada, no ventas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="hallazgos" aria-labelledby="findTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Hallazgos compartibles</span>
+        <h2 id="findTitle">Datos que merecen una captura de pantalla</h2>
+        <p class="lead">Tarjetas listas para compartir en Facebook, Instagram, Telegram o WhatsApp. Toca “Compartir” y envía la señal a tu grupo.</p>
+      </div>
+      <div class="share-grid">
+        <article class="share-card reveal">
+          <span class="share-kicker">Composición</span>
+          <strong class="share-stat">78,3%</strong>
+          <p>de la oferta observada en La Habana es eléctrica (motos + bicicletas).</p>
+          <button class="btn btn-share" data-share="78,3% de la oferta de motos en La Habana es eléctrica. Datos de MotoMarket Insights Cuba." type="button">Compartir</button>
+        </article>
+        <article class="share-card reveal">
+          <span class="share-kicker">Marcas</span>
+          <strong class="share-stat accent-2">Topmaq</strong>
+          <p>lidera la presencia del mercado con 506 anuncios publicados.</p>
+          <button class="btn btn-share" data-share="Topmaq lidera la presencia del mercado de motos en La Habana con 506 anuncios. Vía MotoMarket Insights Cuba." type="button">Compartir</button>
+        </article>
+        <article class="share-card reveal">
+          <span class="share-kicker">Demanda</span>
+          <strong class="share-stat">60,8</strong>
+          <p>vistas promedio por anuncio de combustión, frente a 14,9 en eléctricas.</p>
+          <button class="btn btn-share" data-share="La combustión genera más interés por anuncio: 60,8 vistas promedio vs 14,9 en eléctricas. MotoMarket Insights Cuba." type="button">Compartir</button>
+        </article>
+        <article class="share-card reveal">
+          <span class="share-kicker">Precios</span>
+          <strong class="share-stat">2.250 <small>USD</small></strong>
+          <p>es la mediana de una moto de combustión; una bicicleta eléctrica ronda 1.150.</p>
+          <button class="btn btn-share" data-share="Mediana de precio: 2.250 USD en combustión y 1.150 USD en bicicleta eléctrica. Datos: MotoMarket Insights Cuba." type="button">Compartir</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="testimonios" aria-labelledby="quoteTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Voces del mercado</span>
+        <h2 id="quoteTitle">Lo que dicen compradores, talleres e importadoras</h2>
+        <p class="lead">30 entrevistas de campo entre octubre y noviembre de 2026. Frases que explican lo que los números no alcanzan a contar.</p>
+      </div>
+      <div class="quotes-grid">
+        <figure class="quote-card reveal">
+          <blockquote>“En ocasiones no puedo usar la moto por el apagón.”</blockquote>
+          <figcaption><span class="avatar">C25</span><span><strong>Comprador 025</strong><small>Uso diario · eléctrica</small></span></figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote>“La autonomía anunciada era real, pero ha perdido con el tiempo.”</blockquote>
+          <figcaption><span class="avatar">C25</span><span><strong>Comprador 025</strong><small>Autonomía y batería</small></span></figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote>“La autonomía varía según el peso, la velocidad y las lomas.”</blockquote>
+          <figcaption><span class="avatar">T04</span><span><strong>Taller 004</strong><small>Servicio técnico</small></span></figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote>“El avance se inclina hacia los equipos eléctricos.”</blockquote>
+          <figcaption><span class="avatar">IM</span><span><strong>Solimport</strong><small>Importadora</small></span></figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote>“Los apagones afectan mucho la decisión de compra.”</blockquote>
+          <figcaption><span class="avatar">C23</span><span><strong>Comprador 023</strong><small>Carga y apagones</small></span></figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote>“Hoy elegiría combustión por practicidad y seguridad.”</blockquote>
+          <figcaption><span class="avatar">C25</span><span><strong>Comprador 025</strong><small>Decisión de compra</small></span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="necesidades" aria-labelledby="needTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Necesidades y oportunidades</span>
+        <h2 id="needTitle">Dónde duele el mercado y dónde están las oportunidades</h2>
+        <p class="lead">Los problemas recurrentes son también nichos de negocio. Estas son las señales que dejaron los datos y las entrevistas.</p>
+      </div>
+      <div class="subsection-label reveal"><span>Necesidades detectadas</span></div>
+      <div class="needs-grid">
+        <article class="need reveal"><span class="need-icon">🔋</span><h3>Baterías</h3><p>El costo y la vida útil de la batería son el principal gasto de una eléctrica.</p></article>
+        <article class="need reveal"><span class="need-icon">⚡</span><h3>Apagones</h3><p>La carga nocturna y la inestabilidad eléctrica condicionan el uso diario.</p></article>
+        <article class="need reveal"><span class="need-icon">🧩</span><h3>Repuestos</h3><p>Conseguir piezas es un problema transversal en talleres y compradores.</p></article>
+        <article class="need reveal"><span class="need-icon">📏</span><h3>Autonomía</h3><p>La autonomía real es variable y depende del peso, la velocidad y el terreno.</p></article>
+        <article class="need reveal"><span class="need-icon">📄</span><h3>Papeles</h3><p>Chapa, licencia y registro aparecen como riesgos frecuentes en la compra.</p></article>
+      </div>
+      <div class="subsection-label reveal"><span>Oportunidades de negocio</span></div>
+      <div class="opps-grid">
+        <article class="opp reveal"><span class="opp-tag">Alta</span><h3>⚡ Electrificación</h3><p>Oferta eléctrica dominante: servicios de batería, carga y mantenimiento especializado.</p></article>
+        <article class="opp reveal"><span class="opp-tag">Media</span><h3>🏍️ Mercado de combustión</h3><p>Menos oferta, pero más interés por anuncio: nicho de compraventa y repuestos.</p></article>
+        <article class="opp reveal"><span class="opp-tag">Alta</span><h3>🔧 Servicios técnicos</h3><p>Demanda creciente de mecánicos que dominen motores y baterías eléctricas.</p></article>
+        <article class="opp reveal"><span class="opp-tag">Media</span><h3>📦 Importación</h3><p>Bicicletas eléctricas y patinetes como entrada de menor precio al mercado.</p></article>
+        <article class="opp reveal"><span class="opp-tag">Alta</span><h3>🚀 Nuevos negocios</h3><p>Alquiler, mensajería y carga compartida: usos laborales ya dominantes.</p></article>
+      </div>
+      <div class="compare-card reveal" aria-label="Comparación entre combustión y eléctrica">
+        <div class="compare-head">
+          <h3>Combustión vs eléctrica</h3>
+          <div class="segmented small" role="group" aria-label="Métrica a comparar">
+            <button class="seg rounded is-active" data-compare="price" type="button">Precio</button>
+            <button class="seg rounded" data-compare="views" type="button">Vistas</button>
+            <button class="seg rounded" data-compare="offer" type="button">Oferta</button>
+          </div>
+        </div>
+        <div class="compare-body">
+          <div class="compare-side comb">
+            <span class="compare-name">Combustión</span>
+            <strong id="compareCombValue">2.250</strong>
+            <span class="compare-unit" id="compareUnit">USD</span>
+            <div class="compare-bar"><span id="compareCombBar" style="width:100%"></span></div>
+          </div>
+          <div class="compare-vs">VS</div>
+          <div class="compare-side elec">
+            <span class="compare-name">Eléctrica</span>
+            <strong id="compareElecValue">2.050</strong>
+            <span class="compare-unit" id="compareUnit2">USD</span>
+            <div class="compare-bar"><span id="compareElecBar" style="width:91.1%"></span></div>
+          </div>
+        </div>
+        <p class="compare-note" id="compareNote">La combustión cuesta un 9,8% más y tiene menos oferta, pero genera más interés por anuncio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="quiz" aria-labelledby="quizTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Gamificación</span>
+        <h2 id="quizTitle">Pon a prueba tu lectura del mercado</h2>
+        <p class="lead">Seis preguntas, retroalimentación inmediata y puntuación final. Demuestra cuánto sabes del mercado de motos en La Habana.</p>
+      </div>
+      <div class="game-grid">
+        <div class="card quiz-card reveal" id="quizCard">
+          <div class="quiz-top">
+            <span class="quiz-step" id="quizStep">Pregunta 1 de 6</span>
+            <span class="quiz-score" id="quizScore">0 pts</span>
+          </div>
+          <div class="quiz-progress"><span id="quizProgress"></span></div>
+          <h3 id="quizQuestion">Cargando pregunta…</h3>
+          <div class="quiz-options" id="quizOptions"></div>
+          <p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p>
+          <div class="quiz-actions">
+            <button class="btn btn-ghost" id="quizRestart" type="button" hidden>Reiniciar quiz</button>
+          </div>
+        </div>
+        <div class="game-side">
+          <div class="card mini-game reveal">
+            <span class="eyebrow">Reto rápido</span>
+            <h3>¿Cuál es la marca líder?</h3>
+            <p>Presencia medida por número de anuncios publicados.</p>
+            <div class="guess-grid" id="guessGrid">
+              <button type="button" data-guess="topmaq">Topmaq</button>
+              <button type="button" data-guess="jmd">JMD</button>
+              <button type="button" data-guess="mountain">Mountain</button>
+              <button type="button" data-guess="vedca">Vedca</button>
+            </div>
+            <p class="guess-feedback" id="guessFeedback" aria-live="polite"></p>
+          </div>
+          <div class="card mini-game reveal" id="buyerGame">
+            <span class="eyebrow">Perfil</span>
+            <h3>¿Qué tipo de comprador eres?</h3>
+            <div id="buyerQuestions"></div>
+            <p class="buyer-result" id="buyerResult" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="metodologia" aria-labelledby="methodTitle">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Metodología</span>
+        <h2 id="methodTitle">De anuncios dispersos a inteligencia de mercado</h2>
+        <p class="lead">Un pipeline reproducible de siete etapas. Sin atajos, sin cajas negras: cada cifra se puede rastrear hasta su fuente.</p>
+      </div>
+      <ol class="timeline reveal">
+        <li><span class="tl-dot"></span><div><strong>Scraping</strong><p>Captura automatizada de anuncios públicos en Revolico (La Habana), en tres cortes entre el 10 y el 26 de octubre de 2026.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Limpieza</strong><p>Normalización de títulos, precios y monedas; saneamiento de contactos y deduplicación de registros.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Clasificación</strong><p>Asignación a cuatro categorías oficiales: combustión, moto eléctrica, bicicleta eléctrica y patinete.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Análisis</strong><p>Estadísticas de precio, oferta, demanda y marcas; validación de integridad del dataset.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Entrevistas</strong><p>25 compradores, 4 talleres y 1 importadora para interpretar los números con contexto real.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Visualización</strong><p>Gráficos, dashboard y herramientas interactivas para explorar el mercado sin fricción.</p></div></li>
+        <li><span class="tl-dot"></span><div><strong>Informe</strong><p>Informe público, reporte técnico y métricas reproducibles para auditar cada hallazgo.</p></div></li>
+      </ol>
+      <div class="method-details reveal">
+        <details>
+          <summary>¿De dónde salen los datos?</summary>
+          <p>La base cuantitativa son 6.101 anuncios públicos de Revolico en La Habana. La base cualitativa son 30 entrevistas de campo. Los precios se expresan en USD; los anuncios en CUP se conservan para conteo.</p>
+        </details>
+        <details>
+          <summary>¿Qué limitaciones tiene el estudio?</summary>
+          <p>Los anuncios representan oferta publicada, no ventas efectivas. La ventana de 17 días no permite medir crecimiento. El dataset no incluye municipio ni condición (nueva/usada), y la muestra cualitativa es pequeña y no probabilística.</p>
+        </details>
+        <details>
+          <summary>¿Cómo se calculan las estimaciones?</summary>
+          <p>El comparador usa los percentiles 25, 50 y 75 de cada categoría. La calculadora aplica factores de marca, estado y extras sobre la mediana de la categoría. Son referencias orientativas, no tasaciones oficiales.</p>
+        </details>
+        <details>
+          <summary>¿Con qué tecnologías está construida la plataforma?</summary>
+          <p>HTML5, CSS3 y JavaScript puro. Chart.js para visualizaciones, Leaflet y Leaflet.heat para geointeligencia, y Web Speech API para la narración. Sin frameworks de frontend.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-section" aria-labelledby="ctaTitle">
+    <div class="container cta-inner reveal">
+      <div>
+        <span class="eyebrow">Observatorio abierto</span>
+        <h2 id="ctaTitle">La próxima decisión de mercado empieza con un dato</h2>
+        <p>Explora el mercado, comparte un hallazgo o lleva la inteligencia a tu taller, importadora o próximo negocio.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="#dashboard">Volver al dashboard</a>
+        <a class="btn btn-ghost" href="https://github.com/harolric78-lab/Mercado-de-Motos" target="_blank" rel="noopener">Ver proyecto de datos</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="#top" aria-label="MotoMarket Insights Cuba, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="30" height="30"><path d="M14 42h36l-6-14H26l-6 8h-6z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="20" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="44" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+        </span>
+        <span class="brand-text"><strong>MotoMarket</strong><small>Insights Cuba</small></span>
+      </a>
+      <p class="footer-note">Inteligencia de mercado para el sector de las motos en Cuba. Datos públicos, entrevistas de campo y visualización interactiva.</p>
+    </div>
+    <div>
+      <h4>Explorar</h4>
+      <ul><li><a href="#dashboard">Dashboard</a></li><li><a href="#comparador">Comparador</a></li><li><a href="#calculadora">Calculadora</a></li><li><a href="#mapa">Mapa</a></li><li><a href="#quiz">Quiz</a></li></ul>
+    </div>
+    <div>
+      <h4>Recursos</h4>
+      <ul>
+        <li><a href="https://github.com/harolric78-lab/Mercado-de-Motos" target="_blank" rel="noopener">Repositorio de datos</a></li>
+        <li><a href="https://raw.githack.com/harolric78-lab/Mercado-de-Motos/master/Informe_Proyecto_Mercado_Motos.pdf" target="_blank" rel="noopener">Informe del proyecto</a></li>
+        <li><a href="https://raw.githack.com/harolric78-lab/Mercado-de-Motos/master/Reporte_Tecnico_Proyecto_Mercado_Motos.pdf" target="_blank" rel="noopener">Reporte técnico</a></li>
+        <li><a href="campana.md">Kit de campaña</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li>La Habana, Cuba</li>
+        <li>Proyecto abierto a colaboraciones</li>
+        <li><a href="https://github.com/harolric78-lab" target="_blank" rel="noopener">@harolric78-lab</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 MotoMarket Insights Cuba. Proyecto de inteligencia de mercado.</span>
+    <span>Datos de oferta publicada · no representan ventas efectivas</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
