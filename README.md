@@ -68,14 +68,6 @@ npx serve .
 
 Usar un servidor local es recomendable para que el portapapeles y algunas APIs funcionen con un origen seguro.
 
-## Publicar en GitHub Pages
-
-1. Crea un repositorio o usa `Proyecto-Campa-a-Publicitaria-`.
-2. Sube `index.html`, `style.css`, `script.js`, `mapa_datos.js`, `mapa_municipios.js`, `datos_mapa/`, `campana.md` y `README.md` a la rama `main`.
-3. En GitHub ve a **Settings → Pages**.
-4. En **Source** elige **Deploy from a branch**, rama `main` y carpeta `/ (root)`.
-5. Guarda y espera unos minutos. La URL será `https://USUARIO.github.io/REPOSITORIO/`.
-
 Comandos de ejemplo:
 
 ```bash
