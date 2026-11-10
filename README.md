@@ -1,6 +1,6 @@
 # MotoMarket Insights Cuba
 
-Plataforma web de inteligencia de mercado para el sector de las motos en Cuba. Convierte 6.101 anuncios públicos y 30 entrevistas de campo en datos accionables para compradores, talleres, mecánicos, importadoras y emprendedores.
+Plataforma web de inteligencia de mercado para el sector de las motos en Cuba. Convierte 6.159 anuncios públicos y 30 entrevistas de campo en datos accionables para compradores, talleres, mecánicos, importadoras y emprendedores.
 
 **Sitio:** pendiente de despliegue · **Datos:** [Mercado-de-Motos](https://github.com/harolric78-lab/Mercado-de-Motos)
 
@@ -12,7 +12,7 @@ Plataforma web de inteligencia de mercado para el sector de las motos en Cuba. C
 - Comparador de precios: indica si una oferta es excelente, buena, normal o elevada.
 - Calculadora de precio justo por categoría, marca, estado y extras.
 - Narrador inteligente con Web Speech API.
-- Mapa interactivo de La Habana con Leaflet y mapa de calor con Leaflet.heat.
+- Mapa interactivo con los 15 municipios reales de La Habana: polígonos coloreados por cantidad de anuncios, top 3 resaltado y vista alternativa de burbujas.
 - Ranking animado de marcas y tarjetas de hallazgos compartibles.
 - Testimonios de compradores, talleres e importadoras.
 - Necesidades, oportunidades, timeline de metodología y sección de transparencia.
@@ -25,7 +25,7 @@ Plataforma web de inteligencia de mercado para el sector de las motos en Cuba. C
 - CSS3 con variables, grid, animaciones y media queries.
 - JavaScript puro, sin frameworks.
 - Chart.js 4 para visualizaciones.
-- Leaflet 1.9 y Leaflet.heat para geointeligencia.
+- Leaflet 1.9 para geointeligencia y tiles de OpenStreetMap sin API key.
 - Web Speech API para narración.
 - Google Fonts: Space Grotesk e Inter.
 
@@ -33,11 +33,19 @@ Plataforma web de inteligencia de mercado para el sector de las motos en Cuba. C
 
 ```text
 Proyecto de campana publicitaria/
-├── index.html      # Estructura y contenido de la plataforma
-├── style.css       # Tema visual, layout y responsive
-├── script.js       # Datos, gráficos e interactividad
-├── campana.md      # Kit de campaña y calendario de publicación
-└── README.md       # Este documento
+├── index.html           # Estructura y contenido de la plataforma
+├── style.css            # Tema visual, layout y responsive
+├── script.js            # Datos, gráficos e interactividad
+├── mapa_datos.js        # Métricas reales por municipio
+├── mapa_municipios.js   # Polígonos GeoJSON de los 15 municipios
+├── datos_mapa/
+│   ├── anuncios_georreferenciados.csv
+│   ├── municipios_georreferenciacion.csv
+│   ├── municipios_geometrias.geojson
+│   ├── resumen_municipios.csv
+│   └── resumen_municipios.json
+├── campana.md           # Kit de campaña y calendario de publicación
+└── README.md            # Este documento
 ```
 
 ## Ejecutar en local
@@ -63,7 +71,7 @@ Usar un servidor local es recomendable para que el portapapeles y algunas APIs f
 ## Publicar en GitHub Pages
 
 1. Crea un repositorio o usa `Proyecto-Campa-a-Publicitaria-`.
-2. Sube `index.html`, `style.css`, `script.js`, `campana.md` y `README.md` a la rama `main`.
+2. Sube `index.html`, `style.css`, `script.js`, `mapa_datos.js`, `mapa_municipios.js`, `datos_mapa/`, `campana.md` y `README.md` a la rama `main`.
 3. En GitHub ve a **Settings → Pages**.
 4. En **Source** elige **Deploy from a branch**, rama `main` y carpeta `/ (root)`.
 5. Guarda y espera unos minutos. La URL será `https://USUARIO.github.io/REPOSITORIO/`.
@@ -71,7 +79,7 @@ Usar un servidor local es recomendable para que el portapapeles y algunas APIs f
 Comandos de ejemplo:
 
 ```bash
-git add index.html style.css script.js campana.md README.md
+git add index.html style.css script.js mapa_datos.js mapa_municipios.js datos_mapa campana.md README.md
 git commit -m "Lanza plataforma MotoMarket Insights Cuba"
 git push origin main
 ```
@@ -106,7 +114,7 @@ Cuando pregunte por el framework, elige **Other**. Directorio de salida: `.` y s
 
 - **Datos del mercado:** edita `MEDIANS` y `MARKET` al inicio de `script.js`.
 - **Preguntas del quiz:** edita el arreglo `QUIZ` en `script.js`.
-- **Municipios y pesos del mapa:** edita `MUNICIPALITIES` en `script.js`.
+- **Mapa:** edita `mapa_datos.js` para las cifras por municipio y `mapa_municipios.js` para los polígonos GeoJSON. Los CSV y GeoJSON auditables están en `datos_mapa/`.
 - **Narración:** edita el arreglo `NARRATION` en `script.js`.
 - **Colores y tipografía:** edita las variables de `:root` en `style.css`.
 - **Enlaces de informes y repositorio:** edítalos en el `footer` de `index.html`.
@@ -117,14 +125,19 @@ Cuando pregunte por el framework, elige **Other**. Directorio de salida: `.` y s
 - Fuente cualitativa: 25 compradores, 4 talleres y 1 importadora (30 entrevistas).
 - Precios en USD. Los anuncios en CUP se conservan para conteo.
 - Categorías: motos de combustión, motos eléctricas, bicicletas eléctricas y patinetes.
+- Georreferenciación: 105 de 6.159 anuncios (1,70%) tienen municipio identificable; 90 provienen de la referencia Apollo y 15 de mención explícita en el texto. Los 6.054 restantes se excluyen.
+- Cobertura municipal: 12 de 15 municipios con datos. Top 3: Plaza de la Revolución (35), Centro Habana (19) y Playa (16).
+- Límites y centroides: OpenStreetMap / Overpass API (`admin_level=6`, consulta del 09/11/2026), sin coordenadas simuladas.
 - El proyecto completo, el ETL y los informes están en el repositorio de datos.
 
 ## Limitaciones y transparencia
 
 - Los anuncios representan oferta publicada, no ventas efectivas.
 - La ventana de 17 días no permite medir crecimiento.
-- El dataset no contiene municipio ni condición (nueva/usada).
-- El mapa de calor es una simulación visual demostrativa; está señalado en la interfaz.
+- El dataset no incluye condición (nueva/usada).
+- Solo el 1,70% de los anuncios (105/6.159) tiene municipio identificable. El mapa usa esa cobertura parcial y no representa el total del mercado.
+- El mapa asigna cada anuncio al municipio declarado, no a una dirección exacta. Guanabacoa, Habana Vieja y Regla no tienen anuncios identificables.
+- Los precios por municipio se basan en muestras pequeñas y no deben interpretarse como precios de venta.
 - Las estimaciones de precio son orientativas y no sustituyen una inspección técnica.
 - La muestra cualitativa es pequeña y no probabilística.
 

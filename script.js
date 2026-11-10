@@ -5,28 +5,33 @@ const fmt = (value, decimals = 0) =>
   new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
+    useGrouping: true,
   }).format(value);
 
+const sharePct = (value, total, decimals = 1) =>
+  total ? ((value / total) * 100).toFixed(decimals).replace(".", ",") : "0";
+
 const MEDIANS = {
-  combustion: { label: "Moto de combustión", median: 2250, p25: 1900, p75: 2600, min: 50, max: 26000 },
-  electrica: { label: "Moto eléctrica", median: 2050, p25: 1300, p75: 2630, min: 50, max: 45000 },
-  bicicleta: { label: "Bicicleta eléctrica", median: 1150, p25: 670, p75: 1650, min: 50, max: 111111 },
-  patinete: { label: "Patinete eléctrico", median: 750, p25: 730, p75: 800, min: 50, max: 1250 },
+  combustion: { label: "Moto de combustión", median: 2300, p25: 1900, p75: 2600, min: 50, max: 26000 },
+  electrica: { label: "Moto eléctrica", median: 2170, p25: 1400, p75: 2650, min: 50, max: 45000 },
+  bicicleta: { label: "Bicicleta eléctrica", median: 1150, p25: 655, p75: 1650, min: 50, max: 111111 },
+  patinete: { label: "Patinete eléctrico", median: 750, p25: 700, p75: 800, min: 50, max: 1250 },
 };
 
 const MARKET = {
-  total: 6101,
+  total: 6159,
   categories: [
-    { key: "bicicleta", label: "Bicicletas eléctricas", count: 2576, price: 1150, views: 27.4, color: "#00e5ff" },
-    { key: "electrica", label: "Motos eléctricas", count: 2201, price: 2050, views: 14.9, color: "#7c5cff" },
-    { key: "combustion", label: "Motos de combustión", count: 1099, price: 2250, views: 60.8, color: "#ff8a3d" },
-    { key: "patinete", label: "Patinetes", count: 225, price: 750, views: 9.2, color: "#f472b6" },
+    { key: "bicicleta", label: "Bicicletas eléctricas", count: 2653, price: 1150, views: 27.4, color: "#00e5ff" },
+    { key: "electrica", label: "Motos eléctricas", count: 2125, price: 2170, views: 14.9, color: "#7c5cff" },
+    { key: "combustion", label: "Motos de combustión", count: 1137, price: 2300, views: 60.8, color: "#ff8a3d" },
+    { key: "patinete", label: "Patinetes", count: 244, price: 750, views: 9.2, color: "#f472b6" },
   ],
   brands: [
     { name: "Topmaq", count: 506, color: "#00e5ff" },
-    { name: "JMD", count: 227, color: "#38bdf8" },
+    { name: "JMD", count: 235, color: "#38bdf8" },
     { name: "Mountain", count: 187, color: "#818cf8" },
-    { name: "Vedca", count: 173, color: "#a78bfa" },
+    { name: "Vedca", count: 174, color: "#a78bfa" },
+    { name: "Yoazaky", count: 171, color: "#c084fc" },
     { name: "Challenger", count: 170, color: "#f472b6" },
   ],
 };
@@ -407,10 +412,10 @@ const initCalculator = () => {
 
 const NARRATION = [
   "Bienvenido a MotoMarket Insights Cuba, la plataforma de inteligencia de mercado para el sector de las motos en Cuba.",
-  "Analizamos seis mil ciento un anuncios publicados en La Habana durante diecisiete días, y treinta entrevistas de campo a compradores, talleres e importadoras.",
-  "El hallazgo principal: el setenta y ocho punto tres por ciento de la oferta observada es eléctrica. Las bicicletas eléctricas lideran con dos mil quinientos setenta y seis anuncios, seguidas por las motos eléctricas con dos mil doscientos uno.",
-  "En precios, la mediana de una moto de combustión es de dos mil doscientos cincuenta dólares. Una moto eléctrica ronda los dos mil cincuenta, una bicicleta eléctrica los mil ciento cincuenta, y un patinete los setecientos cincuenta.",
-  "En marcas, Topmaq lidera la presencia del mercado con quinientos seis anuncios, seguida por J M D, Mountain, Vedca y Challenger.",
+  "Analizamos seis mil ciento cincuenta y nueve anuncios publicados en La Habana durante diecisiete días, y treinta entrevistas de campo a compradores, talleres e importadoras.",
+  "El hallazgo principal: el setenta y siete punto seis por ciento de las motos y bicicletas publicadas es eléctrico. Las bicicletas eléctricas lideran con dos mil seiscientos cincuenta y tres anuncios, seguidas por las motos eléctricas con dos mil ciento veinticinco.",
+  "En precios, la mediana de una moto de combustión es de dos mil trescientos dólares. Una moto eléctrica ronda los dos mil ciento setenta, una bicicleta eléctrica los mil ciento cincuenta, y un patinete los setecientos cincuenta.",
+  "En marcas, Topmaq lidera la presencia del mercado con quinientos seis anuncios, seguida por J M D, Mountain, Vedca y Yoazaky.",
   "La combustión tiene menos oferta, pero genera más interés por anuncio: sesenta punto ocho vistas promedio, frente a catorce punto nueve en las motos eléctricas.",
   "Las entrevistas revelan que la batería, la autonomía, los apagones y la disponibilidad de repuestos son los principales dolores del mercado. También aparecen los papeles y la chapa como factores de riesgo.",
   "Las oportunidades están claras: servicios especializados de batería y carga, mantenimiento de motores eléctricos, importación de bicicletas y patinetes, y negocios de alquiler y mensajería.",
@@ -498,103 +503,249 @@ const initNarrator = () => {
   }
 };
 
-const MUNICIPALITIES = [
-  { name: "Habana Vieja", lat: 23.136, lng: -82.359, weight: 0.95 },
-  { name: "Centro Habana", lat: 23.133, lng: -82.376, weight: 0.9 },
-  { name: "Plaza de la Revolución", lat: 23.125, lng: -82.386, weight: 0.85 },
-  { name: "Diez de Octubre", lat: 23.09, lng: -82.36, weight: 0.8 },
-  { name: "Cerro", lat: 23.11, lng: -82.39, weight: 0.72 },
-  { name: "Marianao", lat: 23.08, lng: -82.43, weight: 0.7 },
-  { name: "Playa", lat: 23.094, lng: -82.44, weight: 0.66 },
-  { name: "Arroyo Naranjo", lat: 23.03, lng: -82.37, weight: 0.62 },
-  { name: "San Miguel del Padrón", lat: 23.09, lng: -82.33, weight: 0.6 },
-  { name: "Guanabacoa", lat: 23.12, lng: -82.3, weight: 0.52 },
-  { name: "Habana del Este", lat: 23.15, lng: -82.3, weight: 0.5 },
-  { name: "Boyeros", lat: 23.0, lng: -82.4, weight: 0.46 },
-  { name: "Regla", lat: 23.13, lng: -82.33, weight: 0.42 },
-  { name: "La Lisa", lat: 23.06, lng: -82.46, weight: 0.4 },
-  { name: "Cotorro", lat: 23.03, lng: -82.27, weight: 0.32 },
-];
+const initGeoStats = () => {
+  const data = window.MAPA_DATA;
+  if (!data) return;
+  const withData = data.municipios
+    .filter((m) => m.anuncios > 0)
+    .sort((a, b) => b.anuncios - a.anuncios);
+  if (!withData.length) return;
+
+  const top = withData[0];
+  const min = Math.min(...withData.map((m) => m.anuncios));
+  const bottoms = withData.filter((m) => m.anuncios === min);
+  const set = (selector, text) => {
+    const el = $(selector);
+    if (el) el.textContent = text;
+  };
+
+  set("#geoTotal", fmt(data.georreferenciados));
+  set("#geoTotalNote", `de ${fmt(data.dataset_total)} registros`);
+  set("#geoCoverage", `${sharePct(data.georreferenciados, data.dataset_total, 2)}%`);
+  set("#geoDiscardedNote", `${fmt(data.descartados)} sin municipio`);
+  set("#geoTop", top.municipio);
+  set("#geoTopCount", `${fmt(top.anuncios)} anuncios · ${sharePct(top.anuncios, data.georreferenciados)}% del total georreferenciado`);
+  if (bottoms.length > 1) {
+    set("#geoBottom", `${bottoms.length} municipios`);
+    set("#geoBottomCount", `${bottoms.map((m) => m.municipio).join(", ")} · ${min} anuncio c/u`);
+  } else {
+    set("#geoBottom", bottoms[0].municipio);
+    set("#geoBottomCount", `${min} anuncio · ${sharePct(min, data.georreferenciados)}%`);
+  }
+
+  const list = $("#mapRanking");
+  if (list) {
+    const max = top.anuncios;
+    list.innerHTML = withData
+      .map((m, index) => {
+        const width = Math.max((m.anuncios / max) * 100, 3);
+        const label = `${m.municipio}: ${m.anuncios} anuncios, ${sharePct(m.anuncios, data.georreferenciados)}% del total georreferenciado`;
+        return `<li class="map-rank-row" aria-label="${label}">
+          <span class="map-rank-pos">${String(index + 1).padStart(2, "0")}</span>
+          <span class="map-rank-name">${m.municipio}</span>
+          <div class="map-rank-bar"><span style="--w:${width}%"></span></div>
+          <span class="map-rank-value">${fmt(m.anuncios)}</span>
+          <span class="map-rank-share">${sharePct(m.anuncios, data.georreferenciados)}%</span>
+        </li>`;
+      })
+      .join("");
+  }
+
+  const legendMin = $("#legendMin");
+  const legendMid = $("#legendMid");
+  const legendMax = $("#legendMax");
+  if (legendMin && legendMid && legendMax) {
+    legendMin.textContent = "0";
+    legendMid.textContent = "10";
+    legendMax.textContent = fmt(top.anuncios);
+  }
+};
+
+const mapPopup = (m, data) => {
+  const categories = [
+    ["Bicicletas eléctricas", m.bicicletas_electricas],
+    ["Motos eléctricas", m.motos_electricas],
+    ["Motos de combustión", m.motos_combustion],
+    ["Patinetes", m.patinetes],
+  ]
+    .filter(([, value]) => value > 0)
+    .map(([label, value]) => `<span>${label}: <strong>${fmt(value)}</strong></span>`)
+    .join("");
+  const median = m.precio_mediano_usd
+    ? `${fmt(m.precio_mediano_usd)} USD <small>(n=${fmt(m.n_precio_valido)})</small>`
+    : "sin precio válido";
+  return `<div class="map-popup">
+    <strong>${m.municipio}</strong>
+    <span class="map-popup-kicker">${fmt(m.anuncios)} anuncios · ${sharePct(m.anuncios, data.georreferenciados)}% del total georreferenciado</span>
+    <div class="map-popup-cats">${categories}</div>
+    <div class="map-popup-price">Precio mediano: <strong>${median}</strong></div>
+    <div class="map-popup-source">Fuente: ${fmt(m.fuente_apollo)} Apollo + ${fmt(m.fuente_texto)} texto</div>
+    <div class="map-popup-note">Asignación por municipio declarado; no es una dirección exacta.</div>
+  </div>`;
+};
+
+const mapColor = (count) => {
+  if (count >= 20) return "#ff4d5e";
+  if (count >= 10) return "#ff8a3d";
+  if (count >= 5) return "#f5c542";
+  if (count > 0) return "#22c55e";
+  return "#334155";
+};
 
 const initMap = () => {
   const el = $("#map");
-  if (!el || typeof L === "undefined") return;
+  if (!el) return;
+  const data = window.MAPA_DATA;
+  if (typeof L === "undefined") {
+    el.innerHTML = '<div class="map-error">No se pudo cargar Leaflet. Revisa la conexión e inténtalo de nuevo.</div>';
+    return;
+  }
+  if (!data) {
+    el.innerHTML = '<div class="map-error">No se encontró la capa geográfica real. Falta cargar mapa_datos.js.</div>';
+    return;
+  }
+  const withData = data.municipios
+    .filter((m) => m.anuncios > 0)
+    .sort((a, b) => b.anuncios - a.anuncios);
+  if (!withData.length) {
+    el.innerHTML = '<div class="map-error">No hay anuncios con municipio identificable en el dataset.</div>';
+    return;
+  }
+  const geoData = window.MAPA_GEO;
+  if (!geoData || !Array.isArray(geoData.features) || !geoData.features.length) {
+    el.innerHTML = '<div class="map-error">No se encontraron los límites municipales. Falta cargar mapa_municipios.js.</div>';
+    return;
+  }
 
   const map = L.map(el, {
-    center: [23.1, -82.37],
+    center: [23.08, -82.38],
     zoom: 11,
     zoomControl: true,
     scrollWheelZoom: false,
     attributionControl: true,
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd",
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Límites: OSM Overpass',
     maxZoom: 19,
   }).addTo(map);
 
-  let seed = 7;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
+  const byName = new Map(data.municipios.map((m) => [m.municipio, m]));
+  const top3 = new Set(withData.slice(0, 3).map((m) => m.municipio));
 
-  const heatPoints = [];
-  const pins = L.layerGroup();
+  const municipiosLayer = L.geoJSON(geoData, {
+    style: (feature) => {
+      const name = feature.properties.municipio;
+      const record = byName.get(name);
+      const count = record ? record.anuncios : 0;
+      const isTop = top3.has(name);
+      return {
+        color: isTop ? "#fbbf24" : "#334155",
+        weight: isTop ? 3 : 1.3,
+        opacity: 1,
+        fillColor: mapColor(count),
+        fillOpacity: count > 0 ? 0.72 : 0.3,
+        dashArray: count > 0 ? null : "4 4",
+      };
+    },
+    onEachFeature: (feature, layer) => {
+      const name = feature.properties.municipio;
+      const record = byName.get(name);
+      if (!record || record.anuncios === 0) {
+        layer.bindTooltip(`${name} · sin anuncios`, { direction: "top", className: "map-tooltip" });
+        layer.bindPopup(`<div class="map-popup">
+          <strong>${name}</strong>
+          <span class="map-popup-kicker">Sin anuncios con municipio identificable.</span>
+          <div class="map-popup-note">No se imputaron datos ni coordenadas.</div>
+        </div>`);
+      } else {
+        layer.bindPopup(mapPopup(record, data));
+        const isTop = top3.has(name);
+        const position = withData.findIndex((m) => m.municipio === name) + 1;
+        layer.bindTooltip(
+          isTop ? `#${position} · ${name} — ${fmt(record.anuncios)} anuncios` : `${name} · ${fmt(record.anuncios)} anuncios`,
+          {
+            direction: "top",
+            offset: [0, -6],
+            className: isTop ? "map-tooltip map-tooltip-top" : "map-tooltip",
+          }
+        );
+      }
+      layer.on({
+        mouseover: (event) => {
+          event.target.setStyle({ weight: top3.has(name) ? 4 : 3, color: "#ffffff" });
+          event.target.bringToFront();
+        },
+        mouseout: () => municipiosLayer.resetStyle(layer),
+      });
+    },
+  }).addTo(map);
 
-  MUNICIPALITIES.forEach((m) => {
-    const n = 10 + Math.round(m.weight * 30);
-    for (let i = 0; i < n; i += 1) {
-      const lat = m.lat + (rand() - 0.5) * 0.035;
-      const lng = m.lng + (rand() - 0.5) * 0.045;
-      heatPoints.push([lat, lng, Math.min(0.25 + m.weight * (0.5 + rand() * 0.5), 1)]);
-    }
-    const level = m.weight >= 0.8 ? "Alta" : m.weight >= 0.55 ? "Media" : "Baja";
-    L.circleMarker([m.lat, m.lng], {
-      radius: 5,
-      color: "#00e5ff",
-      weight: 1.5,
-      fillColor: "#00e5ff",
-      fillOpacity: 0.8,
+  const topBadges = L.layerGroup();
+  withData.slice(0, 3).forEach((m, index) => {
+    L.marker([m.lat, m.lon], {
+      icon: L.divIcon({
+        className: "map-top-badge-wrap",
+        html: `<span class="map-top-badge">#${index + 1}</span>`,
+        iconSize: [30, 30],
+        iconAnchor: [[30, 30], [0, 0], [15, 30]][index] || [15, 15],
+      }),
+      interactive: true,
+      keyboard: false,
+      zIndexOffset: 1000,
     })
-      .bindPopup(`<strong>${m.name}</strong><br>Actividad simulada: ${level}<br><span style="color:#8fa3bd">Zona demostrativa · no proviene del dataset</span>`)
+      .bindTooltip(`#${index + 1} · ${m.municipio} — ${fmt(m.anuncios)} anuncios`, {
+        direction: "top",
+        className: "map-tooltip map-tooltip-top",
+      })
+      .bindPopup(mapPopup(m, data))
+      .addTo(topBadges);
+  });
+
+  const pins = L.layerGroup();
+  withData.forEach((m) => {
+    const color = mapColor(m.anuncios);
+    const radius = 7 + Math.sqrt(m.anuncios) * 4.4;
+    L.circleMarker([m.lat, m.lon], {
+      radius,
+      color,
+      weight: 2,
+      fillColor: color,
+      fillOpacity: 0.55,
+    })
+      .bindPopup(mapPopup(m, data))
+      .bindTooltip(`${m.municipio} · ${fmt(m.anuncios)} anuncios`, { direction: "top", className: "map-tooltip" })
       .addTo(pins);
   });
 
-  const heat = typeof L.heatLayer === "function"
-    ? L.heatLayer(heatPoints, {
-        radius: 30,
-        blur: 24,
-        maxZoom: 13,
-        minOpacity: 0.28,
-        gradient: { 0.2: "#22c55e", 0.5: "#f5c542", 0.7: "#ff8a3d", 1: "#ff4d5e" },
-      }).addTo(map)
-    : null;
+  map.fitBounds(municipiosLayer.getBounds().pad(0.04));
 
-  const heatBtn = $("#mapHeatBtn");
+  const municipiosBtn = $("#mapHeatBtn");
   const pinsBtn = $("#mapPinsBtn");
 
   const setMode = (mode) => {
-    if (heat) {
-      if (mode === "heat") heat.addTo(map);
-      else map.removeLayer(heat);
+    if (mode === "municipios") {
+      if (!map.hasLayer(municipiosLayer)) municipiosLayer.addTo(map);
+      if (!map.hasLayer(topBadges)) topBadges.addTo(map);
+      if (map.hasLayer(pins)) map.removeLayer(pins);
+    } else {
+      if (map.hasLayer(municipiosLayer)) map.removeLayer(municipiosLayer);
+      if (map.hasLayer(topBadges)) map.removeLayer(topBadges);
+      if (!map.hasLayer(pins)) pins.addTo(map);
     }
-    if (mode === "pins") pins.addTo(map);
-    else map.removeLayer(pins);
   };
 
-  setMode("heat");
+  setMode("municipios");
 
-  if (heatBtn && pinsBtn) {
-    heatBtn.addEventListener("click", () => {
-      heatBtn.classList.add("is-active");
+  if (municipiosBtn && pinsBtn) {
+    municipiosBtn.addEventListener("click", () => {
+      municipiosBtn.classList.add("is-active");
       pinsBtn.classList.remove("is-active");
-      setMode("heat");
+      setMode("municipios");
     });
     pinsBtn.addEventListener("click", () => {
       pinsBtn.classList.add("is-active");
-      heatBtn.classList.remove("is-active");
+      municipiosBtn.classList.remove("is-active");
       setMode("pins");
     });
   }
@@ -659,15 +810,15 @@ const initShare = () => {
 const QUIZ = [
   {
     question: "¿Qué porcentaje de la oferta observada es eléctrica?",
-    options: ["62,0%", "78,3%", "45,0%", "90,0%"],
+    options: ["62,0%", "77,6%", "45,0%", "90,0%"],
     correct: 1,
-    explanation: "El 78,3% de los anuncios son motos y bicicletas eléctricas.",
+    explanation: "El 77,6% de los anuncios son motos y bicicletas eléctricas.",
   },
   {
     question: "¿Qué categoría concentra más anuncios?",
     options: ["Motos eléctricas", "Bicicletas eléctricas", "Motos de combustión", "Patinetes"],
     correct: 1,
-    explanation: "Las bicicletas eléctricas lideran con 2.576 anuncios.",
+    explanation: "Las bicicletas eléctricas lideran con 2.653 anuncios.",
   },
   {
     question: "¿Qué marca tiene mayor presencia en el mercado?",
@@ -677,9 +828,9 @@ const QUIZ = [
   },
   {
     question: "¿Cuál es el precio mediano de una moto de combustión?",
-    options: ["1.150 USD", "2.250 USD", "3.100 USD", "750 USD"],
+    options: ["1.150 USD", "2.300 USD", "3.100 USD", "750 USD"],
     correct: 1,
-    explanation: "La mediana de combustión es 2.250 USD.",
+    explanation: "La mediana de combustión es 2.300 USD.",
   },
   {
     question: "¿Qué categoría genera más vistas promedio por anuncio?",
@@ -865,9 +1016,9 @@ const initBuyerGame = () => {
 };
 
 const COMPARE_MODES = {
-  price: { comb: 2250, elec: 2050, unit: "USD", note: "La combustión cuesta un 9,8% más y tiene menos oferta, pero genera más interés por anuncio." },
+  price: { comb: 2300, elec: 2170, unit: "USD", note: "La combustión cuesta un 6,0% más y tiene menos oferta, pero genera más interés por anuncio." },
   views: { comb: 60.8, elec: 14.9, unit: "vistas/anuncio", note: "La combustión genera más de 4 veces el interés por anuncio de una moto eléctrica." },
-  offer: { comb: 1099, elec: 2201, unit: "anuncios", note: "Hay casi el doble de motos eléctricas publicadas que de motos de combustión." },
+  offer: { comb: 1137, elec: 2125, unit: "anuncios", note: "Hay casi el doble de motos eléctricas publicadas que de motos de combustión." },
 };
 
 const initCompare = () => {
@@ -907,6 +1058,7 @@ const boot = () => {
   initComparator();
   initCalculator();
   initNarrator();
+  initGeoStats();
   initMap();
   initShare();
   initQuiz();
