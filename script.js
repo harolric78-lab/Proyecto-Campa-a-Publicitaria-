@@ -618,17 +618,22 @@ const initMap = () => {
   }
 
   const map = L.map(el, {
-    center: [23.08, -82.38],
+    center: [23.0181, -82.2443],
     zoom: 11,
     zoomControl: true,
     scrollWheelZoom: false,
     attributionControl: true,
   });
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Límites: OSM Overpass',
+  const baseLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Límites: OSM Overpass',
     maxZoom: 19,
+    subdomains: "abcd",
   }).addTo(map);
+
+  baseLayer.on("tileerror", () => {
+    el.innerHTML = '<div class="map-error">No se pudieron cargar los mapas base. Revisa tu conexión a internet e inténtalo de nuevo.</div>';
+  });
 
   const byName = new Map(data.municipios.map((m) => [m.municipio, m]));
   const top3 = new Set(withData.slice(0, 3).map((m) => m.municipio));
@@ -1049,6 +1054,66 @@ const initCompare = () => {
   });
 };
 
+const initVisitorCounter = () => {
+  const STORAGE_KEY = 'mm_visitor_id';
+  const TOTAL_KEY = 'mm_visits_total';
+  const SOURCE_KEY = 'mm_visitor_sources';
+
+  let visitorId = localStorage.getItem(STORAGE_KEY);
+  const isNewVisitor = !visitorId;
+  if (!visitorId) {
+    visitorId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+    localStorage.setItem(STORAGE_KEY, visitorId);
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const utmSource = params.get('utm_source');
+  const referrer = document.referrer || '';
+
+  let source = 'directo';
+  if (utmSource) {
+    source = utmSource.toLowerCase();
+  } else if (/facebook\.com|fb\.com|m\.facebook\.com/.test(referrer)) {
+    source = 'facebook';
+  } else if (/instagram\.com/.test(referrer)) {
+    source = 'instagram';
+  } else if (referrer) {
+    source = 'otro_referidor';
+  }
+
+  const sourceMap = {
+    facebook: 'facebook', fb: 'facebook',
+    instagram: 'instagram', ig: 'instagram',
+    whatsapp: 'whatsapp', wa: 'whatsapp',
+    telegram: 'telegram', tg: 'telegram',
+    twitter: 'twitter', x: 'twitter',
+    linkedin: 'linkedin',
+    github: 'github',
+  };
+  source = sourceMap[source] || source;
+
+  let sources = {};
+  try {
+    sources = JSON.parse(localStorage.getItem(SOURCE_KEY) || '{}');
+  } catch (e) {
+    sources = {};
+  }
+
+  if (isNewVisitor) {
+    const total = parseInt(localStorage.getItem(TOTAL_KEY) || '0', 10) + 1;
+    localStorage.setItem(TOTAL_KEY, String(total));
+    sources[source] = (sources[source] || 0) + 1;
+    localStorage.setItem(SOURCE_KEY, JSON.stringify(sources));
+  }
+
+  const all = counterSources || {};
+  return {
+    getTotal: () => parseInt(localStorage.getItem(TOTAL_KEY) || '0', 10),
+    getSource: (s) => sources[s] || 0,
+    getAllSources: () => ({ ...sources }),
+  };
+};
+
 const boot = () => {
   initNav();
   initScroll();
@@ -1065,6 +1130,23 @@ const boot = () => {
   initGuess();
   initBuyerGame();
   initCompare();
+
+  const counter = initVisitorCounter();
+  const sources = counter.getAllSources();
+
+  const set = (id, key) => {
+    const el = $(id);
+    if (el) el.textContent = fmt(sources[key] || 0);
+  };
+
+  $('#mm-visits-total') && ($('#mm-visits-total').textContent = fmt(counter.getTotal()));
+  set('#mm-visits-fb', 'facebook');
+  set('#mm-visits-ig', 'instagram');
+  set('#mm-visits-wa', 'whatsapp');
+  set('#mm-visits-tg', 'telegram');
+  set('#mm-visits-tw', 'twitter');
+  set('#mm-visits-li', 'linkedin');
+  set('#mm-visits-gh', 'github');
 };
 
 if (document.readyState === "loading") {
