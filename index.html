@@ -731,6 +731,16 @@
       </ul>
     </div>
   </div>
+  <div class="container global-counter">
+    <div class="global-counter-head">
+      <span class="global-counter-label"><span class="live-dot"></span> Visitantes globales del proyecto</span>
+      <strong id="mm-visits-global">—</strong>
+    </div>
+    <div class="global-goal">
+      <div class="global-goal-track"><span id="mm-goal-fill"></span></div>
+      <span class="global-goal-text" id="mm-goal-text">Meta: 100 vistas</span>
+    </div>
+  </div>
   <div class="container footer-bottom">
     <span>© 2026 MotoMarket Insights Cuba. Proyecto de inteligencia de mercado.</span>
     <span id="mm-visits-total">0</span> visitantes únicos
@@ -744,6 +754,14 @@
     <span>Datos de oferta publicada · no representan ventas efectivas</span>
   </div>
 </footer>
+
+<div id="mmToast" class="mm-toast" role="status" aria-live="polite">
+  <div class="mm-toast-body">
+    <strong id="mmToastTitle">¡Meta alcanzada! 🎉</strong>
+    <span id="mmToastText">Tu proyecto llegó a 100 vistas globales.</span>
+  </div>
+  <button class="mm-toast-close" id="mmToastClose" type="button" aria-label="Cerrar">×</button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

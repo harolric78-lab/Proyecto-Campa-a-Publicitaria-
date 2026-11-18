@@ -1106,12 +1106,99 @@ const initVisitorCounter = () => {
     localStorage.setItem(SOURCE_KEY, JSON.stringify(sources));
   }
 
-  const all = counterSources || {};
   return {
     getTotal: () => parseInt(localStorage.getItem(TOTAL_KEY) || '0', 10),
     getSource: (s) => sources[s] || 0,
     getAllSources: () => ({ ...sources }),
   };
+};
+
+const initGlobalCounter = () => {
+  const valueEl = $('#mm-visits-global');
+  const widget = $('.global-counter');
+  const fillEl = $('#mm-goal-fill');
+  const goalText = $('#mm-goal-text');
+  if (!valueEl && !widget) return;
+
+  const GOAL = 100;
+  const NAMESPACE = 'motomarketinsightscuba';
+  const KEY = 'visitas';
+  const BASE = 'https://abacus.jasoncameron.dev';
+
+  const showToast = (title, text) => {
+    const toast = $('#mmToast');
+    if (!toast) return;
+    const titleEl = $('#mmToastTitle');
+    const textEl = $('#mmToastText');
+    if (titleEl) titleEl.textContent = title;
+    if (textEl) textEl.textContent = text;
+    toast.classList.add('is-show');
+    const close = $('#mmToastClose');
+    if (close) close.addEventListener('click', () => toast.classList.remove('is-show'), { once: true });
+    setTimeout(() => toast.classList.remove('is-show'), 9000);
+  };
+
+  const celebrate = (count) => {
+    if (localStorage.getItem('mm_milestone_100') === '1') return;
+    localStorage.setItem('mm_milestone_100', '1');
+    showToast('¡Meta alcanzada! 🎉', `Tu proyecto llegó a ${fmt(count)} vistas globales.`);
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        new Notification('MotoMarket Insights Cuba', { body: `¡Tu proyecto llegó a ${fmt(count)} vistas globales!` });
+      } catch (error) {
+        /* ignore */
+      }
+    }
+  };
+
+  const render = (count) => {
+    localStorage.setItem('mm_global_count', String(count));
+    if (valueEl) valueEl.textContent = fmt(count);
+    if (fillEl) fillEl.style.width = `${Math.min((count / GOAL) * 100, 100)}%`;
+    if (goalText) goalText.textContent = count >= GOAL ? `¡Meta alcanzada! ${fmt(count)} vistas` : `Meta: ${GOAL} vistas`;
+    if (widget && count >= GOAL) widget.classList.add('is-goal');
+    if (count >= GOAL) celebrate(count);
+  };
+
+  if ('Notification' in window && Notification.permission === 'default') {
+    window.addEventListener('click', () => {
+      Notification.requestPermission().catch(() => {});
+    }, { once: true });
+  }
+
+  const counted = sessionStorage.getItem('mm_global_counted') === '1';
+  if (!counted) {
+    sessionStorage.setItem('mm_global_counted', '1');
+    try {
+      fetch(`${BASE}/hit/${NAMESPACE}/${KEY}`, { keepalive: true }).catch(() => {});
+    } catch (error) {
+      /* ignore */
+    }
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+
+  const load = () =>
+    fetch(`${BASE}/get/${NAMESPACE}/${KEY}`, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json();
+      })
+      .then((data) => {
+        const count = Number(data && data.value);
+        if (!Number.isFinite(count)) throw new Error('bad value');
+        render(count);
+      })
+      .catch(() => {
+        const cached = parseInt(localStorage.getItem('mm_global_count') || '0', 10);
+        if (valueEl) valueEl.textContent = cached ? fmt(cached) : '—';
+        if (fillEl && cached) fillEl.style.width = `${Math.min((cached / GOAL) * 100, 100)}%`;
+        if (cached >= GOAL) celebrate(cached);
+      })
+      .finally(() => clearTimeout(timer));
+
+  setTimeout(load, counted ? 0 : 1600);
 };
 
 const boot = () => {
@@ -1147,6 +1234,8 @@ const boot = () => {
   set('#mm-visits-tw', 'twitter');
   set('#mm-visits-li', 'linkedin');
   set('#mm-visits-gh', 'github');
+
+  initGlobalCounter();
 };
 
 if (document.readyState === "loading") {
